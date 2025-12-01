@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "id": "ic7ho088",
+    "timestamp": "2025-12-01T14:57:09.642Z",
+    "addedWords": [
+      "today",
+      "i",
+      "started",
+      "building",
+      "the",
+      "audit",
+      "trail",
+      "app"
+    ],
+    "removedWords": [],
+    "replacedWords": [],
+    "oldLength": 0,
+    "newLength": 8,
+    "content": "Today I started building the audit trail app."
+  },
+  {
+    "id": "cftusvl5",
+    "timestamp": "2025-12-01T14:57:36.531Z",
+    "addedWords": [],
+    "removedWords": [],
+    "replacedWords": [
+      {
+        "from": "app",
+        "to": "dashboard"
+      }
+    ],
+    "oldLength": 8,
+    "newLength": 8,
+    "content": "Today I started building the audit trail dashboard.\n"
+  },
+  {
+    "id": "f5wk3pb1",
+    "timestamp": "2025-12-01T14:58:06.124Z",
+    "addedWords": [],
+    "removedWords": [
+      "trail",
+      "dashboard"
+    ],
+    "replacedWords": [
+      {
+        "from": "today",
+        "to": "this"
+      },
+      {
+        "from": "i",
+        "to": "version"
+      },
+      {
+        "from": "started",
+        "to": "now"
+      },
+      {
+        "from": "building",
+        "to": "tracks"
+      },
+      {
+        "from": "the",
+        "to": "changes"
+      },
+      {
+        "from": "audit",
+        "to": "accurately"
+      }
+    ],
+    "oldLength": 8,
+    "newLength": 6,
+    "content": "This version now tracks changes accurately.\n"
+  },
+  {
+    "id": "nerclpc9",
+    "timestamp": "2025-12-01T15:00:01.571Z",
+    "addedWords": [
+      "unfolding"
+    ],
+    "removedWords": [],
+    "replacedWords": [],
+    "oldLength": 6,
+    "newLength": 7,
+    "content": "This version now tracks changes unfolding accurately."
+  }
+]
