@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 // Helper: clean text into lowercase words without punctuation
 function cleanWords(text) {
   return text
@@ -19,34 +16,24 @@ function countWords(words) {
   return counter;
 }
 
+// Initialize in-memory storage
+global.versions = global.versions || [];
+
 export default function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const filePath = path.join(process.cwd(), "data", "versions.json");
-
-  // Read new content from request
   const newText = req.body.content || "";
+  if (!newText.trim()) return res.status(400).json({ error: "Content is empty" });
+
+  const versions = global.versions;
+  const oldText = versions.length > 0 ? versions[versions.length - 1].content : "";
+
   const newWords = cleanWords(newText);
-  const newCount = countWords(newWords);
-
-  let versions = [];
-  let oldText = "";
-
-  // Load previous versions if file exists
-  try {
-    const raw = fs.readFileSync(filePath, "utf8");
-    versions = JSON.parse(raw);
-    if (versions.length > 0) {
-      oldText = versions[versions.length - 1].content;
-    }
-  } catch (err) {
-    // File may not exist yet — start with empty versions
-    versions = [];
-  }
-
   const oldWords = cleanWords(oldText);
+
+  const newCount = countWords(newWords);
   const oldCount = countWords(oldWords);
 
   // Detect added and removed words
@@ -55,7 +42,6 @@ export default function handler(req, res) {
   const replacedWords = [];
 
   const allWords = new Set([...Object.keys(oldCount), ...Object.keys(newCount)]);
-
   allWords.forEach(word => {
     const oldQty = oldCount[word] || 0;
     const newQty = newCount[word] || 0;
@@ -68,13 +54,13 @@ export default function handler(req, res) {
     }
   });
 
-  // Simple replacement detection: words removed and added at same time
+  // Simple replacement detection
   const minLen = Math.min(addedWords.length, removedWords.length);
   for (let i = 0; i < minLen; i++) {
     replacedWords.push({ from: removedWords[i], to: addedWords[i] });
   }
 
-  // Remove replaced words from added/removed
+  // Remove replaced words from added/removed lists
   replacedWords.forEach(r => {
     addedWords.splice(addedWords.indexOf(r.to), 1);
     removedWords.splice(removedWords.indexOf(r.from), 1);
@@ -82,7 +68,7 @@ export default function handler(req, res) {
 
   // Build version object
   const versionEntry = {
-    id: Math.random().toString(36).substring(2, 10), // simple human-readable ID
+    id: Math.random().toString(36).substring(2, 10),
     timestamp: new Date().toISOString(),
     addedWords,
     removedWords,
@@ -92,9 +78,8 @@ export default function handler(req, res) {
     content: newText
   };
 
-  // Save version
-  versions.push(versionEntry);
-  fs.writeFileSync(filePath, JSON.stringify(versions, null, 2));
+  // Save in-memory
+  global.versions.push(versionEntry);
 
   return res.status(200).json(versionEntry);
 }
